@@ -1,0 +1,71 @@
+[DEFAULT]
+logdir = /var/log/nova
+state_path = /var/lib/nova
+lock_path = /var/lib/nova/tmp
+my_ip=<%= @ipaddress_br_s %>
+
+auth_strategy=keystone
+image_service=nova.image.glance.GlanceImageService
+glance_api_servers=glance.elex-tech.com:9292
+
+osapi_compute_extension=nova.api.openstack.compute.contrib.standard_extensions
+s3_host=s3.elex-tech.com
+s3_port=3333
+
+volume_group=nova-volumes
+volume_name_template=volume-%08x
+scsi_ip_address=$my_ip
+
+#dhcpbridge = /usr/bin/nova-dhcpbridge
+#dhcpbridge_flagfile = /etc/nova/nova.conf
+#force_dhcp_release = True
+
+
+rll_driver = nova.virt.libvirt.firewall.IptablesFirewallDriver
+rpc_backend = nova.rpc.impl_kombu
+root_helper = sudo nova-rootwrap
+
+rabbit_host=queue.elex-tech.com
+rabbit_password=P@ssw0rd
+rabbit_port=5672
+rabbit_userid=xingyun
+
+#injected_network_template = /usr/share/nova/interfaces.template
+libvirt_xml_template = /etc/nova/libvirt.xml.template
+libvirt_nonblocking = True
+#vpn_client_template = /usr/share/nova/client.ovpn.template
+#credentials_template = /usr/share/nova/novarc.template
+
+iscsi_helper = tgtadm
+
+sql_connection = mysql://nova:nova@db.elex-tech.com/nova
+connection_type = libvirt
+libvirt_type=kvm
+instance_name_template=instance-%08x
+api_paste_config=/etc/nova/api-paste.ini
+allow_resize_to_same_host=True
+resume_guests_state_on_host_boot=True
+start_guests_on_host_boot=True
+
+######### defined in nova.network.manager #########
+network_manager=nova.network.manager.FlatManager
+flat_network_dns=8.8.8.8
+fixed_range=192.168.100.0/24
+flat_network_bridge=br_s
+gateway=192.168.100.1
+flat_injected=True
+public_interface=br_g
+flat_interface=br_s
+
+######### defined in nova.compute.manager #########
+instances_path=/var/nova/instances
+
+
+######### defined in nova.vnc #########
+novncproxy_base_url=http://cloudmm.elex-tech.com:6080/vnc_auto.html
+vnc_enabled=true
+vnc_keymap=en-us
+vncserver_listen=0.0.0.0
+vncserver_proxyclient_address=$my_ip
+#libvirt_inject_partition = -1
+#force_dhcp_release = False
